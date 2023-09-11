@@ -3,17 +3,18 @@ import Energy_Management
 import pandas as pd
 
 
-def calcul_Total_Energy(new_Energy,total_Energy) : 
+def calcul_Total_Energy(new_Energy,total_Energy) :
+    """
+    Calculate the total energy by adding the new energy to the existing total energy.
+    (tested on two different clean energyProducers and also two Batteries)
+
+    """ 
     total_Energy = total_Energy +new_Energy
     return total_Energy
     
 
-
-
-
-
-
 def main():
+
     # CRP = CleanEnergyProducer.cleanEnergyProducer('solar', 0)
     # bat = Battery.battery(1000)
     # cons = Consumer.consumer('household' , 200)
@@ -22,29 +23,33 @@ def main():
     # bat.stock_Energy(800)
     # EM.management()
     ####################################################################
+    # Specify the CSV file path
     csv_file = 'profiles_dataset.csv'
+    # Read the CSV file into a DataFrame
     dataframe = pd.read_csv(csv_file)
+    # Create empty lists to store battery level and grid energy values
     battery_level_values = []
     Grid_values = []
 
-
+    #iterate over the dataframe
     for index, row in dataframe.iterrows():
         timestamp = row['timestamp']
         pv_yield_power = row['pv_yield_power']
         household_consumption = row['household_consumption']
-        CRP = CleanEnergyProducer.cleanEnergyProducer('solar', pv_yield_power)
-        bat = Battery.battery(80000)
-        Gr = Grid.grid(10)
-        cons = Consumer.consumer('household' , household_consumption)
+        CRP = CleanEnergyProducer.CleanEnergyProducer('solar', pv_yield_power)
+        bat = Battery.Battery(80000)
+        Gr = Grid.Grid(10)
+        cons = Consumer.Consumer('household' , household_consumption)
         EM = Energy_Management.enegery_Management(bat,CRP,cons,Gr)
-        SE,GE=EM.management()
-        Grid_values.append(GE)
-        battery_level_values.append(SE)
+        # Perform energy management and get results
+        stock_energy,grid_energy=EM.management()
+        Grid_values.append(grid_energy)
+        battery_level_values.append(stock_energy)
 
 # Add the battery_level column to the DataFrame
     dataframe['battery_level'] = battery_level_values
     dataframe['Grid_energy'] = Grid_values
-
+# Save the updated DataFrame back to the CSV file
     dataframe.to_csv(csv_file, index = False)
 
 
@@ -69,7 +74,9 @@ if __name__ == "__main__":
 
 
 
-
+"""
+Manually Testing of the different classes
+"""
 
 
  # print(Energy_Management.enegery_Management())
