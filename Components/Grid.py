@@ -45,3 +45,16 @@ class Grid :
 
     def get_Electricity_Price(self):
         return self.electricity_price
+def lambda_handler(event, context):
+    # Assuming the Lambda function receives electricity_price as an event parameter
+    electricity_price = float(event.get('electricity_price', 0.0))
+
+    # Create a Grid instance
+    grid = Grid(electricity_price)
+
+    # Call the get_Electricity_Price method of the Grid instance
+    electricity_price = grid.get_Electricity_Price()
+    print('BBBBBB')
+    return {
+        'electricity_price': electricity_price
+    }
