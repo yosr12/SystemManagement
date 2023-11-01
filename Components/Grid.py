@@ -81,7 +81,6 @@ def lambda_handler(event, context):
         # Call the get_Electricity_Price method of the Grid instance
         electricity_price = grid.get_Electricity_Price()
         print('BBBBBB')
-        print('heyfromherhhhhhed')
 
         return {
             'statusCode': 200,
