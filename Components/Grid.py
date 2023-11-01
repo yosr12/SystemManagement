@@ -1,3 +1,6 @@
+import boto3
+ecr_client = boto3.client('ecr')
+
 class Grid : 
 
     """
@@ -46,15 +49,51 @@ class Grid :
     def get_Electricity_Price(self):
         return self.electricity_price
 def lambda_handler(event, context):
-    # Assuming the Lambda function receives electricity_price as an event parameter
-    electricity_price = float(event.get('electricity_price', 0.0))
+    try:
+        # Replace 'firstcontainerformyproject' with your actual repository name
+        repository_name = 'firstcontainerformyproject'
 
-    # Create a Grid instance
-    grid = Grid(electricity_price)
+        # Get the list of images in the repository
+        response = ecr_client.describe_images(
+            repositoryName=repository_name
+        )
+        print('heyfromherhhhhhed')
 
-    # Call the get_Electricity_Price method of the Grid instance
-    electricity_price = grid.get_Electricity_Price()
-    print('BBBBBB')
-    return {
-        'electricity_price': electricity_price
-    }
+        # Sort the images by imagePushedAt timestamp in descending order
+        sorted_images = sorted(
+            response['imageDetails'],
+            key=lambda k: k['imagePushedAt'],
+            reverse=True
+        )
+
+        # Retrieve the latest pushed image
+        latest_image = sorted_images[0]
+
+        # Process the latest image
+        print('Latest image details:', latest_image)
+
+        # Assuming the Lambda function receives electricity_price as an event parameter
+        electricity_price = float(event.get('electricity_price', 0.0))
+
+        # Create a Grid instance
+        grid = Grid(electricity_price)
+
+        # Call the get_Electricity_Price method of the Grid instance
+        electricity_price = grid.get_Electricity_Price()
+        print('BBBBBB')
+        print('heyfromherhhhhhed')
+        print('heyfromherhhhhhed')
+        print('allesgutdir')
+
+        return {
+            'statusCode': 200,
+            'body': 'Lambda function executed successfully.',
+            'electricity_price': electricity_price
+        }
+
+    except Exception as e:
+        print('Error:', str(e))
+        return {
+            'statusCode': 500,
+            'body': 'An error occurred while processing the Lambda function.'
+        }
