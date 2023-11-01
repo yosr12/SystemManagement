@@ -25,7 +25,6 @@ jobs:
           uses: aws-actions/amazon-ecr-login@v1
           
         - name: Build and push the tagged docker image to Amazon ECR
-          id : containerImage
           env:
             ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
             ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
