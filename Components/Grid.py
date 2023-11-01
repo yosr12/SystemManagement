@@ -83,7 +83,6 @@ def lambda_handler(event, context):
         print('BBBBBB')
         print('heyfromherhhhhhed')
         print('heyfromherhhhhhed')
-        print('allesgutdir')
 
         return {
             'statusCode': 200,
