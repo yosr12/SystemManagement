@@ -1,0 +1,21 @@
+name: Build and Push ECR Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t firstcontainerformyproject .
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }} | docker login --username AWS --password-stdin 529239326430.dkr.ecr.eu-west-3.amazonaws.com
+          docker tag firstcontainerformyproject:latest 529239326430.dkr.ecr.eu-west-3.amazonaws.com/firstcontainerformyproject:latest
+          docker push 529239326430.dkr.ecr.eu-west-3.amazonaws.com/firstcontainerformyproject:latest
