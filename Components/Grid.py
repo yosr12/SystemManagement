@@ -65,7 +65,7 @@ def lambda_handler(event, context):
 
     # Create a Grid instance
     grid = Grid(electricity_price)
-    print('lallalaalallalal')
+    print('trythis verison ')
 
     # Call the get_Electricity_Price method of the Grid instance
     electricity_price = grid.get_Electricity_Price()
