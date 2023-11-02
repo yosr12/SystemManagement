@@ -39,3 +39,10 @@ jobs:
           aws lambda update-function-code \
           --function-name $LAMBDA_NAME \
           --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      - name: Invoke updated Lambda function
+        env:
+          LAMBDA_NAME: lambdatryascontainer
+        run: |
+          aws lambda invoke \
+          --function-name $LAMBDA_NAME \
+          --payload '{}'
