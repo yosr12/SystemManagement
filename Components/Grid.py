@@ -57,7 +57,6 @@ def lambda_handler(event, context):
     function_name = 'lambdatryascontainer'  # Replace with your Lambda function name
 
     latest_version = get_latest_lambda_version(lambda_client, function_name)
-    print('lallalaalallalal')
     update_lambda_function_code(lambda_client, function_name, latest_version, repository_name, image_digest)
 
     # Rest of your existing code
