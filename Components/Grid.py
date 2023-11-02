@@ -49,48 +49,42 @@ class Grid :
     def get_Electricity_Price(self):
         return self.electricity_price
 def lambda_handler(event, context):
-    try:
-        # Replace 'firstcontainerformyproject' with your actual repository name
-        repository_name = 'firstcontainerformyproject'
+ # Retrieve the ECR repository and image details from the event
+    repository_name = event['detail']['repository-name']
+    image_digest = event['detail']['image-digest']
 
-        # Get the list of images in the repository
-        response = ecr_client.describe_images(
-            repositoryName=repository_name
-        )
-        print('heyfromherhhhhhed')
+    lambda_client = boto3.client('lambda')
+    function_name = 'lambdatryascontainer'  # Replace with your Lambda function name
 
-        # Sort the images by imagePushedAt timestamp in descending order
-        sorted_images = sorted(
-            response['imageDetails'],
-            key=lambda k: k['imagePushedAt'],
-            reverse=True
-        )
+    latest_version = get_latest_lambda_version(lambda_client, function_name)
+    print('lallalaalallalal')
+    update_lambda_function_code(lambda_client, function_name, latest_version, repository_name, image_digest)
 
-        # Retrieve the latest pushed image
-        latest_image = sorted_images[0]
+    # Rest of your existing code
+    # Assuming the Lambda function receives electricity_price as an event parameter
+    electricity_price = float(event.get('electricity_price', 0.0))
 
-        # Process the latest image
-        print('Latest image details:', latest_image)
+    # Create a Grid instance
+    grid = Grid(electricity_price)
+    print('lallalaalallalal')
 
-        # Assuming the Lambda function receives electricity_price as an event parameter
-        electricity_price = float(event.get('electricity_price', 0.0))
+    # Call the get_Electricity_Price method of the Grid instance
+    electricity_price = grid.get_Electricity_Price()
+    print('BBBBBB')
 
-        # Create a Grid instance
-        grid = Grid(electricity_price)
+def get_latest_lambda_version(lambda_client, function_name):
+    response = lambda_client.list_versions_by_function(FunctionName=function_name)
+    versions = response['Versions']
+    latest_version = max(versions, key=lambda v: int(v['Version']))
+    return latest_version['Version']
 
-        # Call the get_Electricity_Price method of the Grid instance
-        electricity_price = grid.get_Electricity_Price()
-        print('BBBBBB')
+def update_lambda_function_code(lambda_client, function_name, latest_version, repository_name, image_digest):
+    new_image_uri = f'{repository_name}@{image_digest}'
 
-        return {
-            'statusCode': 200,
-            'body': 'Lambda function executed successfully.',
-            'electricity_price': electricity_price
-        }
+    response = lambda_client.update_function_code(
+        FunctionName=function_name,
+        ImageUri=new_image_uri,
+        Publish=True
+    )
 
-    except Exception as e:
-        print('Error:', str(e))
-        return {
-            'statusCode': 500,
-            'body': 'An error occurred while processing the Lambda function.'
-        }
+    print(f"Lambda function {function_name} updated with the latest image: {new_image_uri}")
