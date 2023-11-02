@@ -45,4 +45,5 @@ jobs:
         run: |
           aws lambda invoke \
           --function-name $LAMBDA_NAME \
+          --cli-binary-format raw-in-base64-out \ 
           --payload '{}'
