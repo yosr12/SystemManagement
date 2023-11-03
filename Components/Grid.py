@@ -50,35 +50,26 @@ class Grid :
         return self.electricity_price
 def lambda_handler(event, context):
     try:
-        # Replace 'firstcontainerformyproject' with your actual repository name
         repository_name = 'firstcontainerformyproject'
 
-        # Get the list of images in the repository
         response = ecr_client.describe_images(
             repositoryName=repository_name
         )
         print('heyfromherhhhhhed')
 
-        # Sort the images by imagePushedAt timestamp in descending order
         sorted_images = sorted(
             response['imageDetails'],
             key=lambda k: k['imagePushedAt'],
             reverse=True
         )
 
-        # Retrieve the latest pushed image
         latest_image = sorted_images[0]
 
-        # Process the latest image
         print('Latest image details:', latest_image)
-
-        # Assuming the Lambda function receives electricity_price as an event parameter
         electricity_price = float(event.get('electricity_price', 0.0))
 
-        # Create a Grid instance
         grid = Grid(electricity_price)
 
-        # Call the get_Electricity_Price method of the Grid instance
         electricity_price = grid.get_Electricity_Price()
         print('BBBBBB')
         print('succesufullydone')
