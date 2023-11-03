@@ -62,6 +62,7 @@ def lambda_handler(event, context):
             key=lambda k: k['imagePushedAt'],
             reverse=True
         )
+        print('automated deployement')
 
         latest_image = sorted_images[0]
 
@@ -72,7 +73,6 @@ def lambda_handler(event, context):
 
         electricity_price = grid.get_Electricity_Price()
         print('BBBBBB')
-        print('succesufullydone')
         print('succesufullydone')
 
         return {
