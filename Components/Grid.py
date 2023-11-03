@@ -73,6 +73,7 @@ def lambda_handler(event, context):
         electricity_price = grid.get_Electricity_Price()
         print('BBBBBB')
         print('succesufullydone')
+        print('succesufullydone')
 
         return {
             'statusCode': 200,
