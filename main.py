@@ -30,6 +30,7 @@ def main():
     # Create empty lists to store battery level and grid energy values
     battery_level_values = []
     Grid_values = []
+    print('hey')
 
     #iterate over the dataframe
     for index, row in dataframe.iterrows():
